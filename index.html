@@ -3,70 +3,303 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fonic — офлайн-диктофон с распознаванием речи</title>
-<meta name="description" content="Fonic — диктофон для Android с полностью офлайн-расшифровкой речи: запись, транскрипция, поиск и каталог работают без сети.">
+<title>Fonic — диктофон с офлайн-расшифровкой речи</title>
+<meta name="description" content="Fonic — диктофон для Android, который сам переводит речь в текст прямо на телефоне. Запись, расшифровка, поиск и каталог работают без сети.">
+<meta name="theme-color" content="#3f51b5">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Fonic — диктофон с расшифровкой в текст">
+<meta property="og:description" content="Всё на устройстве, сеть не нужна. Запись, расшифровка и поиск работают даже в самолётном режиме.">
+<meta property="og:image" content="https://nightwelf.github.io/fonic/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/icon.png">
+<link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script src="script.js" defer></script>
 </head>
 <body>
-<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 10h4v4h-4zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 2-2h12v15H7a2 2 0 0 0-2 2z"/><path d="M5 20a2 2 0 0 0 2 1h12v-3M9 7h6M9 11h4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-speed" viewBox="0 0 24 24"><path d="M3.5 17a9 9 0 1 1 17 0"/><path d="m12 14 4.5-5"/><circle cx="12" cy="14" r="1.2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.7 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.8 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="m3 3 18 18"/><path d="M8.5 6.3A6 6 0 0 1 17.6 10 4 4 0 0 1 20.6 16.4M17 18H7a5 5 0 0 1-1.6-9.7"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18"/><path d="M10.6 5.1Q11.3 5 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.6 6.6C3.9 8.4 2 12 2 12s4 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16.5 6.5l2.5 2.5M14 9l2 2"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="3" y="7" width="16" height="10" rx="2.5"/><rect x="5.5" y="9.5" width="9" height="5" rx="1" fill="currentColor" stroke="none"/><path d="M21.5 10.5v3"/></symbol>
+</svg>
 
 <header class="hero">
-  <img src="assets/icon.png" alt="Иконка Fonic">
-  <div>
-    <h1>Fonic</h1>
-    <p>Диктофон для Android с офлайн-распознаванием речи</p>
+  <div class="hero-bars" aria-hidden="true"></div>
+
+  <nav class="nav container">
+    <a class="logo" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36">Fonic</a>
+    <div class="nav-links">
+      <a href="#features">Возможности</a>
+      <a href="#how">Как это работает</a>
+      <a href="#pricing">Цена</a>
+      <a href="#privacy">Приватность</a>
+    </div>
+  </nav>
+
+  <div class="hero-grid container">
+    <div class="hero-text reveal">
+      <span class="chip"><svg class="i"><use href="#i-plane"/></svg>Работает в самолётном режиме</span>
+      <h1>Fonic</h1>
+      <p class="lead">Диктофон с&nbsp;расшифровкой в&nbsp;текст. Всё на&nbsp;устройстве&nbsp;— сеть не&nbsp;нужна.</p>
+      <p class="sub">Записывайте встречи, лекции и&nbsp;заметки. Fonic превратит речь в&nbsp;текст с&nbsp;таймкодами прямо на&nbsp;телефоне, а&nbsp;поиск найдёт нужную фразу среди всех записей.</p>
+      <div class="actions">
+        <a class="btn btn-light" href="https://play.google.com/store/apps/details?id=ru.nightwelf.fonic"><svg class="i"><use href="#i-play"/></svg>Скачать в Google Play</a>
+        <a class="btn btn-ghost" href="#how">Как это работает<svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+      <p class="meta">Android · 10 записей бесплатно · без подписки</p>
+    </div>
+
+    <div class="phone-wrap reveal" style="--d:2">
+      <div class="phone demo" role="img" aria-label="Экран записи в Fonic: расшифровка с таймкодами и подсветкой текущей фразы">
+        <div class="screen">
+          <div class="p-status"><span>9:41</span><span><svg class="i"><use href="#i-plane"/></svg><svg class="i"><use href="#i-battery"/></svg></span></div>
+          <div class="p-bar">
+            <svg class="i"><use href="#i-back"/></svg>
+            <div><b>Планёрка</b><small>29 сент. · 0:34 · small-q5_1</small></div>
+          </div>
+          <div class="p-wave"></div>
+          <div class="p-player">
+            <span class="p-time">0:00</span>
+            <span class="p-play"><svg class="i"><use href="#i-pause"/></svg></span>
+            <span class="p-speed">1,5×</span>
+          </div>
+          <ol class="p-segs">
+            <li data-t="0"><time>00:00</time>Итак, главное: релиз переносим на&nbsp;четверг.</li>
+            <li data-t="5"><time>00:05</time>Сборку для тестирования отдаём до&nbsp;среды.</li>
+            <li data-t="10"><time>00:10</time>Кто берёт проверку экспорта в&nbsp;zip?</li>
+            <li data-t="15"><time>00:15</time>Я возьму. Заодно проверю импорт старых архивов.</li>
+            <li data-t="22"><time>00:22</time>Отлично. Дальше&nbsp;— карта записей.</li>
+            <li data-t="28"><time>00:28</time>Там осталось поправить подписи адресов.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="float float-a" aria-hidden="true"><svg class="i"><use href="#i-plane"/></svg>Самолётный режим</div>
+      <div class="float float-b" aria-hidden="true"><svg class="i"><use href="#i-chip"/></svg>Распознано на устройстве</div>
+    </div>
   </div>
 </header>
 
-<p>
-  Запись, расшифровка, поиск и каталог записей работают полностью без
-  сети, в самолётном режиме. Сеть — опциональное дополнение (реклама,
-  лицензия, адрес места записи), а не зависимость: её отсутствие не
-  ломает ни один сценарий записи, расшифровки или поиска.
-</p>
+<main>
 
-<h2>Возможности</h2>
+<section class="stats container">
+  <div class="stat reveal"><b class="grad-text">100%</b><span>распознавания на&nbsp;телефоне&nbsp;— без облака и&nbsp;ИИ-сервисов</span></div>
+  <div class="stat reveal" style="--d:1"><b class="grad-text"><svg class="i"><use href="#i-plane"/></svg></b><span>запись, расшифровка и&nbsp;поиск работают без сети</span></div>
+  <div class="stat reveal" style="--d:2"><b class="grad-text">5</b><span>моделей распознавания&nbsp;— от&nbsp;быстрой до&nbsp;самой точной</span></div>
+</section>
 
-<h3>Запись</h3>
-<ul>
-  <li>Фоновая запись с persistent-уведомлением: сворачивание приложения запись не останавливает.</li>
-  <li>Устойчивость к прерываниям (звонок, чужое приложение) и к убийству процесса системой.</li>
-  <li>Живой waveform и быстрый старт записи из шторки (Quick Settings Tile).</li>
-  <li>Разовая геопривязка записи: адрес и карта всех записей.</li>
-</ul>
+<section class="section container" id="features">
+  <div class="section-head reveal">
+    <span class="eyebrow">Возможности</span>
+    <h2>Записывает надёжно. Расшифровывает сам.</h2>
+    <p>Всё, что ждёшь от&nbsp;хорошего диктофона, плюс текст, по&nbsp;которому можно искать.</p>
+  </div>
 
-<h3>Транскрипция</h3>
-<ul>
-  <li>Полностью офлайн, whisper.cpp, без блокировки интерфейса.</li>
-  <li>Выбор модели распознавания под конкретную запись.</li>
-  <li>Фоновая очередь, опция «расшифровывать ночью на зарядке».</li>
-  <li>Сегменты с таймкодами, абзацы по паузам в речи.</li>
-</ul>
+  <div class="bento">
+    <article class="card wide reveal">
+      <div>
+        <div class="icon"><svg class="i"><use href="#i-mic"/></svg></div>
+        <h3>Запись, которая не&nbsp;теряется</h3>
+        <ul class="ticks">
+          <li>Пишет в&nbsp;фоне: свернули приложение&nbsp;— запись идёт, пауза и&nbsp;стоп прямо из&nbsp;уведомления.</li>
+          <li>Звонок или другое приложение забрали микрофон&nbsp;— файл остаётся целым.</li>
+          <li>Система закрыла приложение&nbsp;— запись восстановится.</li>
+          <li>Старт одной кнопкой из&nbsp;шторки и&nbsp;живая волна во&nbsp;время записи.</li>
+        </ul>
+      </div>
+      <div class="notif" aria-hidden="true">
+        <div class="notif-top"><img src="assets/icon.png" alt="">Fonic · сейчас</div>
+        <div class="notif-body"><b>Идёт запись</b><span class="rec"><i></i><span data-clock>12:47</span></span></div>
+        <div class="notif-actions"><span>Пауза</span><span>Стоп</span></div>
+      </div>
+    </article>
 
-<h3>Каталог и поиск</h3>
-<ul>
-  <li>Лента записей с закреплением важных и ручным порядком.</li>
-  <li>Полнотекстовый поиск по расшифровкам.</li>
-  <li>Карта всех записей по месту.</li>
-</ul>
+    <article class="card reveal" style="--d:1">
+      <div class="icon"><svg class="i"><use href="#i-chip"/></svg></div>
+      <h3>Расшифровка на&nbsp;устройстве</h3>
+      <p>whisper.cpp прямо на&nbsp;телефоне, в&nbsp;фоновой очереди и&nbsp;без подвисаний интерфейса. Текст с&nbsp;таймкодами, разбит на&nbsp;абзацы по&nbsp;паузам.</p>
+      <p class="note"><svg class="i"><use href="#i-moon"/></svg>Можно отложить на&nbsp;ночь&nbsp;— расшифруется на&nbsp;зарядке.</p>
+    </article>
 
-<h3>Хранилище, экспорт и импорт</h3>
-<ul>
-  <li>Ручной экспорт в zip (аудио + текст + метаданные) и импорт архива.</li>
-  <li>«Поделиться» расшифровкой: SRT, VTT или обычный текст.</li>
-</ul>
+    <article class="card reveal">
+      <div class="icon"><svg class="i"><use href="#i-book"/></svg></div>
+      <h3>Словарь терминов</h3>
+      <p>Подскажите имена, названия и&nbsp;профессиональные слова для конкретной записи&nbsp;— распознавание будет их&nbsp;знать.</p>
+    </article>
 
-<div class="card">
-  <strong>Приватность.</strong> Аудио и расшифровки не уходят в сеть без
-  явного действия пользователя — экспорт и «поделиться». Подробности —
-  в <a href="privacy.html">политике конфиденциальности</a>.
-</div>
+    <article class="card wide reveal" style="--d:1">
+      <div>
+        <div class="icon"><svg class="i"><use href="#i-search"/></svg></div>
+        <h3>Поиск по&nbsp;всему, что сказано</h3>
+        <p>Полнотекстовый поиск по&nbsp;всем расшифровкам, в&nbsp;том числе по&nbsp;началу слова. Важные записи можно закрепить наверху и&nbsp;расставить перетаскиванием.</p>
+      </div>
+      <div class="search-mock" aria-hidden="true">
+        <div class="search-field"><svg class="i"><use href="#i-search"/></svg>экспорт<span class="caret"></span></div>
+        <div class="result"><b>Планёрка</b><span>…кто берёт проверку <mark>экспорт</mark>а в&nbsp;zip?</span><time>29 сент.</time></div>
+        <div class="result"><b>Идеи по релизу</b><span>…добавить <mark>экспорт</mark> субтитров в&nbsp;SRT…</span><time>24 сент.</time></div>
+      </div>
+    </article>
 
-<footer>
-  <a href="privacy.html">Политика конфиденциальности</a>
+    <article class="card reveal">
+      <div class="icon"><svg class="i"><use href="#i-speed"/></svg></div>
+      <h3>Удобный плеер</h3>
+      <p>Скорость от&nbsp;0,75× до&nbsp;2×. Текущая фраза подсвечивается, а&nbsp;тап по&nbsp;любой фразе перематывает к&nbsp;ней звук.</p>
+    </article>
+
+    <article class="card reveal" style="--d:1">
+      <div class="icon"><svg class="i"><use href="#i-pin"/></svg></div>
+      <h3>Карта записей</h3>
+      <p>По&nbsp;желанию запись один раз запоминает, где сделана: адрес в&nbsp;карточке и&nbsp;все записи на&nbsp;карте.</p>
+    </article>
+
+    <article class="card reveal" style="--d:2">
+      <div class="icon"><svg class="i"><use href="#i-share"/></svg></div>
+      <h3>Экспорт и&nbsp;импорт</h3>
+      <p>Архив zip со&nbsp;звуком, текстом и&nbsp;метаданными&nbsp;— и&nbsp;обратно. Расшифровкой можно поделиться как SRT, VTT или обычным текстом.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section container" id="how">
+  <div class="section-head reveal">
+    <span class="eyebrow">Как это работает</span>
+    <h2>Три шага от&nbsp;голоса к&nbsp;тексту</h2>
+  </div>
+
+  <ol class="steps">
+    <li class="step reveal"><h3>Запишите</h3><p>Кнопкой в&nbsp;приложении или плиткой в&nbsp;шторке. Приложение можно свернуть&nbsp;— запись продолжится.</p></li>
+    <li class="step reveal" style="--d:1"><h3>Расшифруйте</h3><p>Выберите модель и&nbsp;занимайтесь своими делами: распознавание идёт в&nbsp;фоне, прямо на&nbsp;телефоне.</p></li>
+    <li class="step reveal" style="--d:2"><h3>Найдите</h3><p>Ищите по&nbsp;тексту всех записей. Тап по&nbsp;фразе&nbsp;— и&nbsp;плеер включит именно этот момент.</p></li>
+  </ol>
+
+  <div class="card models reveal">
+    <div>
+      <h3>Модель&nbsp;— под задачу</h3>
+      <p>Быстрая для заметок, точная для важного. Модель выбирается для каждой записи, а&nbsp;если результат не&nbsp;устроил&nbsp;— запись можно распознать заново другой.</p>
+    </div>
+    <div class="scale">
+      <ol>
+        <li>tiny</li>
+        <li>base</li>
+        <li class="default">small-q5_1<small>по умолчанию</small></li>
+        <li>small</li>
+        <li>large-v3-turbo</li>
+      </ol>
+      <div class="scale-ends"><span>быстрее</span><span>точнее</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section container" id="pricing">
+  <div class="section-head reveal">
+    <span class="eyebrow">Цена</span>
+    <h2>Бесплатно&nbsp;— или&nbsp;без&nbsp;лимита навсегда</h2>
+  </div>
+
+  <div class="plans">
+    <div class="card plan reveal">
+      <h3>Бесплатно</h3>
+      <p class="price">10 записей</p>
+      <ul class="ticks">
+        <li>С&nbsp;расшифровкой, поиском, картой и&nbsp;экспортом.</li>
+        <li>Дальше место под запись&nbsp;— за&nbsp;короткий рекламный ролик или удалите старые записи.</li>
+        <li>Нет сети или ролика&nbsp;— запись всё равно сохранится и&nbsp;расшифруется, когда появится место.</li>
+      </ul>
+      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=ru.nightwelf.fonic"><svg class="i"><use href="#i-play"/></svg>Скачать в Google Play</a>
+    </div>
+
+    <div class="card plan plan-pro reveal" style="--d:1">
+      <h3>Pro</h3>
+      <p class="price">Без лимита</p>
+      <ul class="ticks">
+        <li>Записей сколько угодно&nbsp;— навсегда.</li>
+        <li>Без рекламного баннера.</li>
+        <li>Без подписки: один лицензионный ключ.</li>
+        <li>Без сети Pro продолжает работать.</li>
+      </ul>
+      <a class="btn btn-light" href="mailto:nightwelf@gmail.com?subject=%D0%9F%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%B0%20Fonic%20Pro"><svg class="i"><use href="#i-key"/></svg>Купить Pro по почте</a>
+    </div>
+  </div>
+</section>
+
+<section class="section container" id="privacy">
+  <div class="privacy reveal">
+    <div class="section-head">
+      <span class="eyebrow">Приватность</span>
+      <h2>Ваши записи никуда не&nbsp;уходят</h2>
+      <p>Fonic не&nbsp;отправляет звук и&nbsp;текст на&nbsp;сервер&nbsp;— ни&nbsp;в&nbsp;фоне, ни&nbsp;для синхронизации, ни&nbsp;в&nbsp;аналитике.</p>
+    </div>
+    <div class="privacy-grid">
+      <div><svg class="i"><use href="#i-phone"/></svg><p><b>Хранится на&nbsp;телефоне.</b> Аудио, расшифровки и&nbsp;метаданные&nbsp;— только в&nbsp;памяти устройства.</p></div>
+      <div><svg class="i"><use href="#i-cloud-off"/></svg><p><b>Без облака.</b> Речь распознаётся на&nbsp;самом телефоне, а&nbsp;не&nbsp;сторонним сервисом.</p></div>
+      <div><svg class="i"><use href="#i-share"/></svg><p><b>Только по&nbsp;вашему действию.</b> Запись покидает устройство, лишь когда вы&nbsp;экспортируете её или делитесь.</p></div>
+      <div><svg class="i"><use href="#i-eye-off"/></svg><p><b>Аналитика не&nbsp;видит текст.</b> Названия записей и&nbsp;расшифровки не&nbsp;попадают в&nbsp;отчёты.</p></div>
+    </div>
+    <a class="link" href="privacy.html">Политика конфиденциальности<svg class="i"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+<section class="section container faq" id="faq">
+  <div class="section-head reveal">
+    <span class="eyebrow">Вопросы</span>
+    <h2>Коротко о&nbsp;главном</h2>
+  </div>
+  <details class="reveal">
+    <summary>Нужен ли интернет?</summary>
+    <p>Для записи, расшифровки и&nbsp;поиска&nbsp;— нет. Сеть пригодится, чтобы один раз скачать модель распознавания, определить адрес записи, показать карту, рекламу и&nbsp;проверить Pro-ключ. Без неё ни&nbsp;один из&nbsp;основных сценариев не&nbsp;ломается.</p>
+  </details>
+  <details class="reveal">
+    <summary>Что будет, если позвонят во&nbsp;время записи?</summary>
+    <p>Запись встанет на&nbsp;паузу, а&nbsp;файл останется целым. Даже если система закроет приложение, Fonic восстановит записанное при следующем запуске.</p>
+  </details>
+  <details class="reveal">
+    <summary>Какую модель выбрать?</summary>
+    <p>По&nbsp;умолчанию стоит small-q5_1&nbsp;— хороший баланс скорости и&nbsp;точности. Для коротких заметок хватит tiny или base, для важных записей берите large-v3-turbo. Модель можно сменить и&nbsp;распознать запись заново.</p>
+  </details>
+  <details class="reveal">
+    <summary>Как купить Pro?</summary>
+    <p>Напишите на&nbsp;<a href="mailto:nightwelf@gmail.com?subject=%D0%9F%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%B0%20Fonic%20Pro">nightwelf@gmail.com</a>&nbsp;— в&nbsp;ответ придёт лицензионный ключ. Введите его в&nbsp;настройках приложения, и&nbsp;лимит на&nbsp;записи исчезнет навсегда.</p>
+  </details>
+</section>
+
+<section class="container">
+  <div class="cta reveal">
+    <img src="assets/icon.png" alt="" width="72" height="72">
+    <h2>Говорите. Fonic запишет.</h2>
+    <p>Бесплатно для Android.</p>
+    <a class="btn btn-light" href="https://play.google.com/store/apps/details?id=ru.nightwelf.fonic"><svg class="i"><use href="#i-play"/></svg>Скачать в Google Play</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer container">
+  <a class="logo" href="index.html"><img src="assets/icon.png" alt="" width="28" height="28">Fonic</a>
+  <span>© 2026</span>
+  <nav>
+    <a href="privacy.html">Политика конфиденциальности</a>
+    <a href="mailto:nightwelf@gmail.com">nightwelf@gmail.com</a>
+  </nav>
 </footer>
 
-</div>
 </body>
 </html>
